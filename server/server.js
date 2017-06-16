@@ -20,10 +20,11 @@ io.on("connection", function(socket){
     socket.emit("newMessage",generateMessage("Admin","Welcome to the chat app"));
     socket.broadcast.emit("newMessage",generateMessage("Admin", "New User joined"));
 
-    socket.on("createMessage", (message)=>{
+    socket.on("createMessage", (message, callback)=>{
       //  console.log("createMessage",message);
        io.emit("newMessage", generateMessage(message.from,message.text));   //emits to all sockets, not just the current socket  ==> broadcast
    /*   socket.broadcast.emit("newMessage",generateMessage(message.from,message.text); //broadcasts to all other sockets, except this one  **/
+        callback("This is from the server.");
     });
 
     socket.on("disconnect", ()=>{
