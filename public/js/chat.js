@@ -107,7 +107,6 @@ socket.on("newLocationMessage", function(message){
    // console.log("message sent");
         console.log("Textbox value: ", messageTextbox.val());
     socket.emit("createMessage",{
-        from: "User",
         text: messageTextbox.val()
     },function(data){
        messageTextbox.val("");  //clear out message text field

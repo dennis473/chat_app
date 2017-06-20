@@ -43,13 +43,22 @@ io.on("connection", function(socket){
 
     socket.on("createMessage", (message, callback)=>{
       //  console.log("createMessage",message);
-       io.emit("newMessage", generateMessage(message.from,message.text));   //emits to all sockets, not just the current socket  ==> broadcast
+        var user = users.getUser(socket.id);
+        if(user && isRealString(message.text))
+        {
+            io.to(user.room).emit("newMessage", generateMessage(user.name,message.text));   //emits to all sockets, not just the current socket  ==> broadcast
+        }
+
    /*   socket.broadcast.emit("newMessage",generateMessage(message.from,message.text); //broadcasts to all other sockets, except this one  **/
         callback("This is from the server.");
     });
 
     socket.on("createLocationMessage", (coords)=>{
-        io.emit("newLocationMessage",generateLocationMessage("Admin",coords.latitude,coords.longitude));
+        var user = users.getUser(socket.id);
+        if(user)
+        {
+            io.to(user.room).emit("newLocationMessage", generateLocationMessage(user.name,coords.latitude,coords.longitude));   //emits to all sockets in room, not just the current socket  ==> broadcast
+        }
     });
 
     socket.on("disconnect", ()=>{
